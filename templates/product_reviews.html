@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.name }} Reviews</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<header>
+    <div class="contact-info">
+        <a href="mailto:info@beanproject.ie">beanproject@eattio.ie</a>
+    </div>
+    <div class="logo"> <img src="{{ url_for('static', filename='BeanProjectLogo.png') }}" alt="BeanProject"></div>
+    <div class="logo_text">The Bean Project</div>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('menu') }}">Menu</a></li>
+            {% if 'username' in session %}
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+            <li><a href="{{ url_for('login') }}">Sign In</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+            {% endif %}
+            {% if 'username' in session and session['username'] == 'admin' %}
+            <li><a href="{{ url_for('admin_users') }}">Admin - User Data</a></li>
+            {% endif %}
+
+        </ul>
+    </nav>
+    <div class="cart">
+        <a href="{{ url_for('cart') }}">
+            <img src="{{ url_for('static', filename='cart.png') }}" alt="Cart" style="width: 35px; height: 35px;">
+            <span id="cart-quantity">({{ cart_quantity }})</span>
+        </a>
+    </div>
+</header>
+<div class="container_pr">
+    <div class="review-header">
+        <h1>{{ product.name }} Reviews</h1>
+        <h3>Average Rating: {{ product.average_rating }}</h3>
+    </div>
+    <ul class="review-list">
+        {% for review in product.reviews %}
+        <li class="review-item">
+            <strong>Rating:</strong> {{ review.rating }}<br>
+            <strong>Comment:</strong> {{ review.comment }}
+        </li>
+        {% endfor %}
+    </ul>
+    <a class="back-link" href="{{ url_for('menu') }}">Back to Menu</a>
+</div>
+<footer>
+    <p>&copy; 2024 The Bean Project Co.</p>
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Catering Service</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #283106;
+        }
+        header {
+            background-color: #D1D8BD;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header img {
+            margin-right: 10px;
+        }
+        .header a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+        }
+        .logo img {
+            width: 80px; /* Adjust the width as needed */
+            height: 80px; /* Maintain aspect ratio */
+            display: flex;
+            align-items: center;
+            margin: 20px;
+            padding-left: 20px;
+        }
+        .header a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+        .container {
+            padding: 20px;
+        }
+        h2 {
+            font-size: 24px;
+            color: #6b8e23;
+            margin-bottom: 20px;
+        }
+        .breadcrumb {
+            margin-bottom: 20px;
+        }
+        .breadcrumb a {
+            text-decoration: none;
+            color: #6b8e23;
+            margin-right: 5px;
+        }
+        .breadcrumb span {
+            margin-right: 5px;
+        }
+
+        checkout-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            width: 400px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .checkout-form {
+            display: flex;
+            justify-content: space-between;
+        }
+        .checkout-form .form-section {
+            width: 65%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .checkout-form .order-summary {
+            width: 30%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .checkout-form h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .checkout-form input, .checkout-form select, .checkout-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .checkout-form .btn {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .checkout-form .btn:hover {
+            background-color: #333;
+        }
+        footer {
+            background-color: #C7C2AB;
+            color: #53524E;
+            padding: 20px 0;
+            margin-top: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-left, .footer-center {
+            display: inline-block;
+            width: 49%;
+            vertical-align: top;
+        }
+
+        .footer-center {
+            text-align: center;
+        }
+        .checkout-form .order-summary p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .checkout-form .order-summary .total {
+            font-weight: bold;
+        }
+        .payment-form h3 {
+            color: #4caf50;
+            margin-bottom: 10px;
+        }
+
+        #card-element {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        #submit {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        #submit:hover {
+            background-color: #45a049;
+        }
+
+        #payment-message {
+            margin-top: 20px;
+            color: #d9534f;
+            display: none;
+        }
+
+
+    </style>
+</head>
+<body>
+<header>
+    <div class="contact-info">
+        <a href="mailto:info@beanproject.ie">beanproject@eattio.ie</a>
+    </div>
+    <div class="logo"> <img src="{{ url_for('static', filename='BeanProjectLogo.png') }}" alt="BeanProject"></div>
+    <div class="logo_text">The Bean Project</div>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('menu') }}">Menu</a></li>
+            {% if 'username' in session %}
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+            <li><a href="{{ url_for('login') }}">Sign In</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+            {% endif %}
+            {% if 'username' in session and session['username'] == 'admin' %}
+            <li><a href="{{ url_for('admin_users') }}">Admin - User Data</a></li>
+            {% endif %}
+
+        </ul>
+    </nav>
+
+</header>
+<div class="container">
+    <div class="breadcrumb">
+        <a href="{{ url_for('index') }}">Home</a> <span>></span>
+        <a href="{{ url_for('cart') }}">View Cart</a> <span>></span>
+        <span>Checkout</span>
+    </div>
+    <h2>Checkout</h2>
+    <div class="checkout-form">
+        <div class="form-section">
+            <h3>Shipping Address</h3>
+            <form method="POST" action="{{ url_for('checkout') }}">
+                <input type="text" name="first_name" placeholder="First Name *" required>
+                <input type="text" name="last_name" placeholder="Last Name *" required>
+                <input type="email" name="email" placeholder="Email *" required>
+                <input type="text" name="address" placeholder="Address *" required>
+                <input type="text" name="city" placeholder="City *" required>
+                <select name="state" required>
+                    <option value="" disabled selected>Select State / Province *</option>
+                    <option value="Carlow">Carlow</option>
+                    <option value="Cavan">Cavan</option>
+                    <option value="Clare">Clare</option>
+                    <option value="Cork">Cork</option>
+                    <option value="Donegal">Donegal</option>
+                    <option value="Dublin">Dublin</option>
+                    <option value="Galway">Galway</option>
+                    <option value="Kerry">Kerry</option>
+                    <option value="Kildare">Kildare</option>
+                    <option value="Kilkenny">Kilkenny</option>
+                    <option value="Laois">Laois</option>
+                    <option value="Leitrim">Leitrim</option>
+                    <option value="Limerick">Limerick</option>
+                    <option value="Longford">Longford</option>
+                    <option value="Louth">Louth</option>
+                    <option value="Mayo">Mayo</option>
+                    <option value="Meath">Meath</option>
+                    <option value="Monaghan">Monaghan</option>
+                    <option value="Offaly">Offaly</option>
+                    <option value="Roscommon">Roscommon</option>
+                    <option value="Sligo">Sligo</option>
+                    <option value="Tipperary">Tipperary</option>
+                    <option value="Waterford">Waterford</option>
+                    <option value="Westmeath">Westmeath</option>
+                    <option value="Wexford">Wexford</option>
+                    <option value="Wicklow">Wicklow</option>
+                </select>
+                <input type="text" name="zip" placeholder="ZIP Code *" required>
+                <input type="tel" name="phone" placeholder="Telephone (Must be Recipient's Phone Number) *" required>
+                <textarea name="gift_message" placeholder="Product Note/Delivery note"></textarea>
+                <label>
+                    <input type="checkbox" name="billing_same_as_shipping" checked>
+                    Billing address is same as Shipping Address
+                </label>
+                <button type="submit" class="btn">Continue</button>
+            </form>
+        </div>
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            {% for item in cart_items %}
+            <p>{{ item.product_name }} (x{{ item.quantity }}): €{{ "%.2f"|format(item['total_price']) }}</p>
+            {% endfor %}
+            <p class="total">Total: €{{ "%.2f"|format(cart_items|sum(attribute='total_price')) }}</p>
+            <form id="payment-form">
+                <div id="card-element"><!-- Stripe.js injects the Card Element --></div>
+                <button id="submit">Pay</button>
+                <div id="payment-message" class="hidden">Card Payment Method - Add your card number </div>
+            </form>
+        </div>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script type="text/javascript">
+            const stripe = Stripe('{{ stripe_publishable_key }}');
+            const elements = stripe.elements();
+            const cardElement = elements.create('card');
+            cardElement.mount('#card-element');
+
+            const form = document.getElementById('payment-form');
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const { error, paymentIntent } = await stripe.confirmCardPayment("{{ client_secret }}", {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: 'Customer Name'
+                        }
+                    }
+                });
+
+                if (error) {
+                    console.error(error);
+                    document.getElementById('payment-message').textContent = error.message;
+                    document.getElementById('payment-message').classList.remove('hidden');
+                } else {
+                    console.log('PaymentIntent:', paymentIntent);
+                    // Redirect to order confirmation after successful payment
+                    if (orderId) {
+                        window.location.href = "{{ url_for('order_confirmation', order_id=order_id) }}";
+                    } else {
+                        console.error("Order ID is missing.");
+                    }
+                }
+            });
+        </script>
+    </div>
+</div>
+<footer>
+    <p>&copy; 2024 Catering Service</p>
+</footer>
+</body>
+</html>

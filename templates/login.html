@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Login</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+<header>
+  <div class="contact-info">
+    <a href="mailto:info@beanproject.ie">beanproject@eattio.ie</a>
+  </div>
+  <div class="logo"> <img src="{{ url_for('static', filename='BeanProjectLogo.png') }}" alt="BeanProject"></div>
+  <div class="logo_text">The Bean Project</div>
+  <nav>
+    <ul>
+      <li><a href="{{ url_for('index') }}">Home</a></li>
+      <li><a href="{{ url_for('menu') }}">Menu</a></li>
+      {% if 'username' in session %}
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      {% else %}
+      <li><a href="{{ url_for('login') }}">Sign In</a></li>
+      <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+      {% endif %}
+      {% if 'username' in session and session['username'] == 'admin' %}
+      <li><a href="{{ url_for('admin_users') }}">Admin - User Data</a></li>
+      {% endif %}
+
+    </ul>
+  </nav>
+</header>
+
+<div class="login-container">
+  <form method="post" action="{{ url_for('login') }}" class="login-form">
+    <h2>Login</h2>
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" name="username" id="username" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" required>
+    </div>
+    <button type="submit" class="login-button">Login</button>
+  </form>
+  <p class="signup-link">Don't have an account? <a href="{{ url_for('signup') }}">Sign up here</a></p>
+</div>
+<footer>
+  <p>&copy; 2024 The Bean Project Co.</p>
+</footer>
+
+</body>
+</html>

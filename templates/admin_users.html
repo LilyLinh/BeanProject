@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin_user</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header>
+    <div class="contact-info">
+        <a href="mailto:info@beanproject.ie">beanproject@eattio.ie</a>
+    </div>
+    <div class="logo"> <img src="{{ url_for('static', filename='BeanProjectLogo.png') }}" alt="BeanProject"></div>
+    <div class="logo_text">The Bean Project</div>
+    <nav>
+        <ul>
+
+            <li><a href="{{ url_for('menu') }}">Menu</a></li>
+            {% if 'username' in session %}
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+            <li><a href="{{ url_for('login') }}">Sign In</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+            {% endif %}
+            {% if 'username' in session and session['username'] == 'admin' %}
+            <li><a href="{{ url_for('admin_users') }}">Admin - User Data</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
+<div class="container_ad">
+    <h2>Admin - User Data</h2>
+    <table class="admin-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="admin-container">
+    <h2>Admin - Order Confirmations</h2>
+    <table class="admin-table">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>User ID</th>
+            <th>Date Ordered</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.user_id }}</td>
+            <td>{{ order.date_ordered.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>
+                <ul>
+                    {% for detail in order.order_details %}
+                    <li>{{ detail.menu_item.name }} - {{ detail.quantity }} x ${{ detail.price }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+    <footer>
+        <p>&copy; 2024 The Bean Project Co.</p>
+    </footer>
+</body>
+</html>

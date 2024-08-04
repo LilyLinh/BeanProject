@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Sign Up</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<header>
+    <div class="contact-info">
+        <a href="mailto:info@beanproject.ie">beanproject@eattio.ie</a>
+    </div>
+    <div class="logo"> <img src="{{ url_for('static', filename='BeanProjectLogo.png') }}" alt="BeanProject"></div>
+    <div class="logo_text">The Bean Project</div>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('menu') }}">Menu</a></li>
+            {% if 'username' in session %}
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+            <li><a href="{{ url_for('login') }}">Sign In</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+            {% endif %}
+            {% if 'username' in session and session['username'] == 'admin' %}
+            <li><a href="{{ url_for('admin_users') }}">Admin - User Data</a></li>
+            {% endif %}
+
+        </ul>
+    </nav>
+</header>
+
+<div class="signup-container-unique">
+    <form method="post" action="{{ url_for('signup') }}" class="signup-form-unique">
+        <h2 class="signup-title">Sign Up</h2>
+        <div class="signup-form-group">
+            <label for="signup-username">Username:</label>
+            <input type="text" name="username" id="signup-username" required>
+        </div>
+        <div class="signup-form-group">
+            <label for="signup-password">Password:</label>
+            <input type="password" name="password" id="signup-password" required>
+        </div>
+        <div class="signup-form-group">
+            <label for="signup-confirm-password">Confirm Password:</label>
+            <input type="password" name="confirm_password" id="signup-confirm-password" required>
+        </div>
+        <button type="submit" class="signup-button-unique">Sign Up</button>
+    </form>
+</div>
+
+
+<footer>
+    <p>&copy; 2024 The Bean Project Co.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Catering Service</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="static/script.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu.css') }}">
+</head>
+<body>
+<header>
+    <div class="contact-info">
+        <a href="mailto:info@beanproject.ie">beanproject@eattio.ie</a>
+    </div>
+    <div class="logo"> <img src="{{ url_for('static', filename='BeanProjectLogo.png') }}" alt="BeanProject"></div>
+    <div class="logo_text">The Bean Project</div>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('menu') }}">Menu</a></li>
+            {% if 'username' in session %}
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+            <li><a href="{{ url_for('login') }}">Sign In</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+            {% endif %}
+            {% if 'username' in session and session['username'] == 'admin' %}
+            <li><a href="{{ url_for('admin_users') }}">Admin - User Data</a></li>
+            {% endif %}
+
+        </ul>
+    </nav>
+    <div class="cart">
+        <a href="{{ url_for('cart') }}">
+            <img src="{{ url_for('static', filename='cart.png') }}" alt="Cart" style="width: 35px; height: 35px;">
+            <span id="cart-quantity">({{ cart_quantity }})</span>
+        </a>
+    </div>
+</header>
+<main>
+<div class="container">
+    <h2>Menu</h2>
+    <div class="category-options">
+        <a href="{{ url_for('menu', category='all') }}" class="{{ 'active' if category == 'all' else '' }}">All</a>
+        <a href="{{ url_for('menu', category='halal') }}" class="{{ 'active' if category == 'halal' else '' }}">Halal</a>
+        <a href="{{ url_for('menu', category='healthy') }}" class="{{ 'active' if category == 'healthy' else '' }}">Healthy</a>
+        <a href="{{ url_for('menu', category='vegan') }}" class="{{ 'active' if category == 'vegan' else '' }}">Vegan</a>
+    </div>
+    <div class="sort-options">
+        <label for="sort">Sort by:</label>
+        <select id="sort" onchange="sortProducts()">
+            {% set options = [
+            {'value': 'price-asc', 'text': 'Price: Low to High'},
+            {'value': 'price-desc', 'text': 'Price: High to Low'}
+            ] %}
+            {% for option in options %}
+            <option value="{{ option.value }}" {% if sort_by == option.value %}selected{% endif %}>
+                {{ option.text }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="products">
+        {% for item in items %}
+        <div class="product">
+            <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.name }}">
+            <h3>{{ item.name }}</h3>
+            <p>${{ item.price }}</p>
+            <p>Status: <span id="availability-{{ item.id }}">{{ item.availability }}</span></p>
+            <p>Average Rating: {{ item.average_rating }}</p>
+            <form action="{{ url_for('add_to_cart') }}" method="post">
+                <input type="hidden" name="product_id" value="{{ item.id }}">
+                <input type="hidden" name="product_name" value="{{ item.name }}">
+                <input type="hidden" name="product_price" value="{{ item.price }}">
+                <input type="hidden" name="image" value="{{ item.image }}">
+                <label for="quantity-{{ item.id }}">Quantity:</label>
+                <input type="number" id="quantity-{{ item.id }}" name="quantity" value="1" min="1">
+                <button type="submit">Add to Cart</button>
+            </form>
+            <form class="review-form" action="{{ url_for('submit_review') }}" method="post">
+                <input type="hidden" name="product_id" value="{{ item.id }}">
+                <div class="form-group">
+                    <label for="rating-{{ item.id }}">Rating:</label>
+                    <input type="number" id="rating-{{ item.id }}" name="rating" min="1" max="5" required>
+                </div>
+                <div class="form-group">
+                    <label for="comment-{{ item.id }}">Comment:</label>
+                    <textarea id="comment-{{ item.id }}" name="comment"></textarea>
+                </div>
+                <button type="submit">Submit Review</button>
+            </form>
+            <a class="view-reviews" href="{{ url_for('product_reviews', product_id=item.id) }}">View Reviews</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if recommended_items %}
+    <h2>Recommended Products</h2>
+    <div class="products">
+        {% for product in recommended_items %}
+        <div class="product">
+            <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}">
+            <h3>{{ product.name }}</h3>
+            <p>€{{ product.price }}</p>
+            <p>Status: <span id="availability-rec-{{ product.id }}">{{ product.availability }}</span></p>
+            <form action="{{ url_for('add_to_cart') }}" method="POST">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <input type="hidden" name="product_name" value="{{ product.name }}">
+                <input type="hidden" name="product_price" value="{{ product.price }}">
+                <input type="hidden" name="image" value="{{ product.image }}">
+                <label for="quantity-rec-{{ product.id }}">Quantity:</label>
+                <input type="number" id="quantity-rec-{{ product.id }}" name="quantity" value="1" min="1">
+                <button type="submit">Add to Cart</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<div class="popup" id="popup">
+    <div class="popup-content">
+        <span class="close" id="close-popup">&times;</span>
+        <p1>Order Meal OR Catering Package:</p1><p2> from 5 dishes and get 8% bill off either</p2>
+    </div>
+</div>
+</main>
+<script>
+    function sortProducts() {
+        const sortValue = document.getElementById('sort').value;
+        const categoryValue = "{{ category }}";
+        window.location.href = "{{ url_for('menu') }}?category=" + categoryValue + "&sort=" + sortValue;
+    }
+    function shopNow() {
+        window.location.href = '/menu';  // Replace with the correct URL for your menu page
+    }
+
+
+    // Show the popup after a delay (e.g., 3 seconds)
+    setTimeout(() => {
+        document.getElementById('popup').style.display = 'block';
+    }, 1000);
+
+    // Close the popup when the close button is clicked
+    document.getElementById('close-popup').addEventListener('click', () => {
+        document.getElementById('popup').style.display = 'none';
+    });
+</script>
+<footer>
+    <p>&copy; 2024 The Bean Project Co.</p>
+</footer>
+</body>
+</html>

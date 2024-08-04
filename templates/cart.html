@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart - Bean Project</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='cart.css') }}">
+</head>
+<body>
+<header>
+  <div class="contact-info">
+    <a href="mailto:info@beanproject.ie">beanproject@eattio.ie</a>
+  </div>
+  <div class="logo"> <img src="{{ url_for('static', filename='BeanProjectLogo.png') }}" alt="BeanProject"></div>
+  <div class="logo_text">The Bean Project</div>
+  <nav>
+    <ul>
+      <li><a href="{{ url_for('index') }}">Home</a></li>
+      <li><a href="{{ url_for('menu') }}">Menu</a></li>
+      {% if 'username' in session %}
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      {% else %}
+      <li><a href="{{ url_for('login') }}">Sign In</a></li>
+      <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+      {% endif %}
+      {% if 'username' in session and session['username'] == 'admin' %}
+      <li><a href="{{ url_for('admin_users') }}">Admin - User Data</a></li>
+      {% endif %}
+
+    </ul>
+  </nav>
+
+</header>
+<div class="container">
+  <h2 class="cart-title">Items</h2>
+  {% for item in cart_items %}
+  <div class="cart-item">
+    <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.product_name }}">
+    <div class="cart-item-info">
+      <h4>{{ item.product_name }}</h4>
+      <p>Price: €{{ "%.2f"|format(item.product_price) }}</p>
+      <p>Quantity: {{ item.quantity }}</p>
+      <form action="{{ url_for('delete_from_cart') }}" method="post">
+        <input type="hidden" name="product_id" value="{{ item.product_id }}">
+        <button type="submit">Delete</button>
+      </form>
+    </div>
+
+    <div class="cart-item-price">€{{ "%.2f"|format(item.product_price * item.quantity) }}</div>
+  </div>
+  {% endfor %}
+  <div class="subtotal">
+    <p>Subtotal ({{ cart_items|length }} Items): €{{ "%.2f"|format(cart_items|sum(attribute='total_price')) }}</p>
+    <p>Shipping and taxes will be calculated at checkout</p>
+    <a href="{{ url_for('checkout') }}" class="checkout-btn">Checkout</a>
+    <a href="{{ url_for('menu') }}" class="checkout-btn">Continue Shopping</a>
+  </div>
+
+</div>
+<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+<script src="{{ url_for('static', filename='cart.js') }}"></script>
+<footer>
+  <p>&copy; 2024 The Bean Project Co.</p>
+</footer>
+</body>
+</html>

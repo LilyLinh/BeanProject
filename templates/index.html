@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catering Service</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header>
+    <div class="contact-info">
+        <a href="mailto:info@beanproject.ie">beanproject@eattio.ie</a>
+    </div>
+    <div class="logo"> <img src="{{ url_for('static', filename='BeanProjectLogo.png') }}" alt="BeanProject"></div>
+    <div class="logo_text">The Bean Project</div>
+    <nav>
+        <ul>
+
+            <li><a href="{{ url_for('menu') }}">Menu</a></li>
+            {% if 'username' in session %}
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+            <li><a href="{{ url_for('login') }}">Sign In</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+            {% endif %}
+            {% if 'username' in session and session['username'] == 'admin' %}
+            <li><a href="{{ url_for('admin_users') }}">Admin - User Data</a></li>
+            {% endif %}
+
+        </ul>
+    </nav>
+    <div class="cart">
+        <a href="{{ url_for('cart') }}">
+            <img src="{{ url_for('static', filename='cart.png') }}" alt="Cart" style="width: 35px; height: 35px;">
+            <span>(2)</span>
+        </a>
+    </div>
+</header>
+<main>
+    <section id="personalized-recommendations">
+        <div class="slider">
+            <div class="slide" style="background-image: url(static/slider2.webp);">
+                <div class="content">
+                    <h2>HEALTHY EATS MADE EASY</h2>
+                    <a href="{{ url_for('menu') }}" class="btn">Shop Now</a>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url(static/slider3.webp);">
+                <div class="content">
+                    <h2>DELICIOUS & NUTRITIOUS</h2>
+                    <a href="{{ url_for('menu') }}" class="btn">Order Now</a>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url(static/slider1.webp);">
+                <div class="content">
+                    <h2>FRESHLY PREPARED MEALS</h2>
+                    <a href="{{ url_for('menu') }}" class="btn">View Menu</a>
+                </div>
+            </div>
+        </div>
+        <div class="navigation">
+            <button class="prev">&#10094;</button>
+            <button class="next">&#10095;</button>
+        </div>
+        <div class="indicator">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+        </div>
+    </section>
+
+    <div class="how-it-works">
+
+        <div class="step">
+            <p>How to order</p>
+            <img src="static/instruction.webp" alt="Handmade meals from our kitchen">
+        </div>
+    </div>
+    <section id="menu-items">
+        <h2>ADD THESE GREAT TASTE WINNERS TO YOUR BOX!</h2>
+        <div class="slider2">
+            <div class="slides2">
+                <div class="slide2">
+                    <img src="static/product4.webp" alt="Falafel and Hummus Salad">
+                    <div class="details2">
+                        <h3>Falafel and Hummus Salad</h3>
+                        <p>€11,90</p>
+                        <p>Status: In stock</p>
+                        <button onclick="shopNow()">Shop Now</button>
+                    </div>
+                </div>
+                <div class="slide2">
+                    <img src="static/product3.webp" alt="Grilled Tuna Steak and Avocado Salads">
+                    <div class="details2">
+                        <h3>Grilled Tuna Steak and Avocado Salad</h3>
+                        <p>€12,90</p>
+                        <p>Status: In stock</p>
+                        <button onclick="shopNow()">Shop Now</button>
+                    </div>
+                </div>
+                <div class="slide2">
+                    <img src="static/product1.webp" alt="Harissa Chicken Rice">
+                    <div class="details2">
+                        <h3>Harissa Chicken Rice</h3>
+                        <p> €13,90</p>
+                        <p>Status: In stock</p>
+                        <button onclick="shopNow()">Shop Now</button>
+                    </div>
+                </div>
+                <div class="slide2">
+                    <img src="static/product2.webp" alt="Charcoal-Grilled Steak and Vegetable">
+                    <div class="details2">
+                        <h3>Charcoal-Grilled Steak and Vegetable</h3>
+                        <p>€ €13,90</p>
+                        <p>Status: In stock</p>
+                        <button onclick="shopNow()">Shop Now</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="navigation2">
+                <button class="prev2">&#10094;</button>
+                <button class="next2">&#10095;</button>
+            </div>
+        </div>
+    </section>
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <span class="close" id="close-popup">&times;</span>
+            <p1>Order Meal OR Catering Package:</p1><p2> from 5 dishes and get 8% bill off either</p2>
+        </div>
+    </div>
+</main>
+<script src="static/script.js"></script>
+<footer>
+    <p>&copy; 2024 The Bean Project Co.</p>
+</footer>
+</body>
+</html>
