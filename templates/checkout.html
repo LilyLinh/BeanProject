@@ -299,7 +299,7 @@
                     console.log('PaymentIntent:', paymentIntent);
                     // Redirect to order confirmation after successful payment
                     if (orderId) {
-                        window.location.href = "{{ url_for('order_confirmation', order_id=order_id) }}";
+                        window.location.href = "{{ url_for('order_confirmation', order_id=order_id if order_id else 0) }}";
                     } else {
                         console.error("Order ID is missing.");
                     }

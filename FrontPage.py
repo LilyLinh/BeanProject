@@ -1,5 +1,5 @@
 import stripe
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -13,7 +13,7 @@ app.secret_key = 'your_secret_key'  # Required to use sessions
 app.config['STRIPE_SECRET_KEY'] = 'sk_test_4eC39HqLyjWDarjtT1zdp7dc'
 app.config['STRIPE_PUBLISHABLE_KEY'] = 'pk_test_TYooMQauvdEDq54NiTphI7jx'
 
-stripe.api_key = app.config['STRIPE_SECRET_KEY']
+stripe.api_key = 'sk_test_51PhatZRrgscvEcuPjdbKha29XQWC4j0WJh2FwjcqrNJgutsq7qJ0SIp2uAWoo4BFRSRSBrSkzax97Fw5ZzhFZqjk00L4e3eDoO'
 
 # Update to your newly created database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user1:user1pass@localhost/user_and_pass'
@@ -243,8 +243,9 @@ def checkout():
             client_secret=client_secret,
             payment_intent_id=payment_intent_id,
             order_id=order_id,
-            stripe_publishable_key=app.config['STRIPE_PUBLISHABLE_KEY']
+            stripe_publishable_key= 'pk_test_51PhatZRrgscvEcuPEl8tAncWsvbP8EblAoUWN6KBG1Z0s0PwJrUmVZo2XkDGthvkQ8QbTbru8Jm40yJHkLWccs2o00xXn46S8F'
         )
+
 @app.route('/order_confirmation/<int:order_id>', methods=['GET'])
 def order_confirmation(order_id):
     print(f"Debug - Order Confirmation: Received order_id = {order_id}")
