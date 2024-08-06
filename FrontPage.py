@@ -19,8 +19,8 @@ stripe.api_key = 'sk_test_51PhatZRrgscvEcuPjdbKha29XQWC4j0WJh2FwjcqrNJgutsq7qJ0S
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user1:user1pass@localhost/user_and_pass'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-password = "adminpassword"
-hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+admin_password = generate_password_hash('adminpassword', method='pbkdf2:sha256')
+print(f"Admin Password: {admin_password}")
 
 
 db = SQLAlchemy(app)
