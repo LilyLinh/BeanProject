@@ -42,3 +42,4 @@ def test_add_to_cart(test_client):
         assert cart[0]['product_price'] == 10.00
         assert cart[0]['quantity'] == 2
         assert cart[0]['image'] == 'test_image.png'
+

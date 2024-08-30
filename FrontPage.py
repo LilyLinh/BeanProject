@@ -1,4 +1,4 @@
-import stripe
+import stripe, os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -17,6 +17,7 @@ stripe.api_key = 'sk_test_51PhatZRrgscvEcuPjdbKha29XQWC4j0WJh2FwjcqrNJgutsq7qJ0S
 
 # Update  newly created database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user1:user1pass@localhost/user_and_pass'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///local.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 admin_password = generate_password_hash('adminpassword', method='pbkdf2:sha256')
