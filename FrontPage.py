@@ -15,12 +15,12 @@ app.config['STRIPE_PUBLISHABLE_KEY'] = 'pk_test_TYooMQauvdEDq54NiTphI7jx'
 
 stripe.api_key = 'sk_test_51PhatZRrgscvEcuPjdbKha29XQWC4j0WJh2FwjcqrNJgutsq7qJ0SIp2uAWoo4BFRSRSBrSkzax97Fw5ZzhFZqjk00L4e3eDoO'
 
-# Update to your newly created database
+# Update  newly created database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user1:user1pass@localhost/user_and_pass'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 admin_password = generate_password_hash('adminpassword', method='pbkdf2:sha256')
-print(f"Admin Password: {admin_password}")
+
 
 
 db = SQLAlchemy(app)
